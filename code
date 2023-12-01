@@ -1,0 +1,49 @@
+import cv2
+import numpy as np
+
+def detect_traffic_lights(image_path):
+    # 이미지 불러오기
+    img = cv2.imread(image_path)
+    if img is None:
+        print("이미지를 불러올 수 없습니다.")
+        return
+
+    # 이미지를 HSV 색공간으로 변환
+    img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    # 각 색상의 범위를 정의합니다.
+    lower_red1 = np.array([0, 100, 100])
+    upper_red1 = np.array([10, 255, 255])
+    lower_red2 = np.array([160, 100, 100])
+    upper_red2 = np.array([179, 255, 255])
+    lower_green = np.array([40, 50, 50])
+    upper_green = np.array([90, 255, 255])
+    lower_yellow = np.array([15, 150, 150])
+    upper_yellow = np.array([35, 255, 255])
+
+    # 색상별로 마스크를 생성합니다.
+    mask_red1 = cv2.inRange(img_hsv, lower_red1, upper_red1)
+    mask_red2 = cv2.inRange(img_hsv, lower_red2, upper_red2)
+    mask_red = cv2.bitwise_or(mask_red1, mask_red2)
+    mask_green = cv2.inRange(img_hsv, lower_green, upper_green)
+    mask_yellow = cv2.inRange(img_hsv, lower_yellow, upper_yellow)
+
+    # 각 색상에 대한 결과 이미지를 출력합니다.
+    red_result = cv2.bitwise_and(img, img, mask=mask_red)
+    green_result = cv2.bitwise_and(img, img, mask=mask_green)
+    yellow_result = cv2.bitwise_and(img, img, mask=mask_yellow)
+
+    # 결과 이미지를 하나로 합치고 화면에 출력합니다.
+    final_result = cv2.bitwise_or(cv2.bitwise_or(red_result, green_result), yellow_result)
+
+    # 이미지 출력
+    cv2.imshow("Original Image", img)
+    cv2.imshow("Traffic Lights Detected", final_result)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+# 이미지 파일 경로를 넣어주세요.
+image_path = 'your_image_path.jpg'
+
+# 함수 호출
+detect_traffic_lights(image_path)
