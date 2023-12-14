@@ -21,5 +21,5 @@ separate the unique differences in color into numbers
 
 ### the language used
 * python
-* AI tool
+* python OpneCV (cv2)
 * 
