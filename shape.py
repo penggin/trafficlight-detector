@@ -27,4 +27,4 @@ def detect_traffic_light(image_path):
 
     # 가장 큰 상위 2개의 사각형 선택
     top_rectangles = sorted(all_rectangles, key=lambda rect: rect[4], reverse=True)[:2]
-    return top_rectangles
+    return top_rectangles, image, hsv_image
